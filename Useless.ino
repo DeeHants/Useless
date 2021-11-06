@@ -1,8 +1,6 @@
 // Useless machine
 // Designed for 1 or 2 toggles, with a servo each
 
-#include <Servo.h>
-
 // Pin data
 const int toggle1Pin = 2;
 const int servo1Pin = 3;
@@ -11,13 +9,15 @@ const int servo2Pin = 5;
 const int ledPin = LED_BUILTIN;
 const int buzzerPin = 8;
 
+#include <Servo.h>
+
 // Toggle status, array to store both sets
 const int togglePin[2] = {toggle1Pin, toggle2Pin};
 const int servoPin[2] = {servo1Pin, servo2Pin};
 Servo servo[2];
-int toggleState[2] = {HIGH, HIGH}; // Has pullup so is high by default
-int toggleAction[2] = {0, 0};
-int toggleStep[2] = {0, 0};
+int toggleState[2];
+int toggleAction[2];
+int toggleStep[2];
 
 // Actions
 const int NULL_ACTION = 0; // No action
@@ -32,7 +32,7 @@ void setup() {
   // Debug output
   Serial.begin(9600);
 
-  // Toggle 1
+  // Toggles
   setupToggle(0);
   setupToggle(1);
 
@@ -46,9 +46,15 @@ void setup() {
   Serial.print("Initialised");
 }
 
+// Setup the pins and state for a single toggle
 void setupToggle(int toggle) {
-  pinMode(togglePin[toggle], INPUT_PULLUP);
-  servo[toggle].attach(servoPin[toggle]);
+  pinMode(togglePin[toggle], INPUT_PULLUP); // We're switching to ground so use a pullup
+  servo[toggle].attach(servoPin[toggle]); // And the important bit, the servo!
+
+  // Set the inital states
+  toggleState[toggle] = HIGH; // Has pullup so is high by default
+  toggleAction[toggle] = 0; // Sentinel value for no action/step
+  toggleStep[toggle] = 0;
 }
 
 void loop() {
