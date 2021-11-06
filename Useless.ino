@@ -43,6 +43,9 @@ void setup() {
   servo[0].write(0);
   servo[1].write(0);
 
+  // Ensure we have random numbers
+  randomSeed(analogRead(0));
+
   Serial.print("Initialised");
 }
 
@@ -73,9 +76,10 @@ void checkToggleState(int toggle) {
   Serial.println("Toggle " + String(toggle) + " state: " + String(newState));
 
   if (newState == LOW && toggleState[toggle] != LOW) { // Has pullup so contact goes low
-    toggleAction[toggle] = 1; // TODO randomise
+    int nextAction = random(0, actionCount) + 1;
+    toggleAction[toggle] = nextAction;
     toggleStep[toggle] = 1;
-    Serial.println("Toggle " + String(toggle) + " pressed");
+    Serial.println("Toggle " + String(toggle) + " pressed, starting action " + String(nextAction));
   }
   toggleState[toggle] = newState;
 }
