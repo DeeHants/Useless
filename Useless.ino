@@ -73,6 +73,11 @@ void loop() {
 void checkToggleState(int toggle) {
   // See if the toggles have changed and trigger the actions
   int newState = digitalRead(togglePin[toggle]);
+  // Attempt to debounce by waiting 100ms and seeing if it's still pressed.
+  if (newState == LOW) {
+    delay(100);
+    newState = digitalRead(togglePin[toggle]);
+  }
   Serial.println("Toggle " + String(toggle) + " state: " + String(newState));
 
   if (newState == LOW && toggleState[toggle] != LOW) { // Has pullup so contact goes low
