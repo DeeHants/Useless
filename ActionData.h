@@ -3,7 +3,7 @@ const int actionCount = 2;
 const int actionOffset[] = {
   0, // (4 x 4) + 1
   25, // (2 x 4) + 1
-  // 26
+  // 42
 };
 const int actionData[] = {
   // Up, slowly back, press, home
@@ -16,7 +16,9 @@ const int actionData[] = {
   LED_ACTION, LOW, 0, 0,
 
   // slowly press, slowly home
-  2, // 2 steps
-  SERVO_ACTION, 100, 1000, 100, // Press over 1s
+  4, // 2 steps
+  LED_ACTION, HIGH, 0, 0, // LED on
+  SERVO_ACTION, 100, 1000, 1000, // Press over 1s
   SERVO_ACTION, 0, 1000, 1000, // Back home
+  LED_ACTION, LOW, 0, 0,
 };
