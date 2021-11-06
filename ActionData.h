@@ -1,10 +1,8 @@
 // Actions
 const int actionCount = 2;
-const int actionOffset[] = {
-  0, // (4 x 4) + 1
-  25, // (2 x 4) + 1
-  // 42
-};
+int actionOffset[actionCount];
+
+// Action data itself
 const int actionData[] = {
   // Up, slowly back, press, home
   6, // 4 steps

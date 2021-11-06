@@ -32,6 +32,9 @@ void setup() {
   // Debug output
   Serial.begin(9600);
 
+  // Setup the action data and make sure it can be accessed
+  setupActionData();
+
   // Toggles
   setupToggle(0);
   setupToggle(1);
@@ -47,6 +50,19 @@ void setup() {
   randomSeed(analogRead(0));
 
   Serial.print("Initialised");
+}
+
+// Setup the action data array so wwe can use it efficiently
+void setupActionData() {
+  int nextOffset = 0;
+  for(int index = 0; index < actionCount; index++) {
+    // Save the offset for this action
+    actionOffset[index] = nextOffset;
+    int stepCount = actionData[nextOffset];
+
+    // Calculate the offset for the next action
+    nextOffset += 1 + (stepCount * 4);
+  }
 }
 
 // Setup the pins and state for a single toggle
