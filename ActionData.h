@@ -3,6 +3,11 @@ const int actionCount = 2;
 int actionOffset[actionCount];
 
 // Action data itself
+// Each action has multiple steps, with a type, two values, and a delay
+// Servo, position (0 - 100), interval (speed), delay
+// Buzzer, frequency, interval, delay
+// LED, state (HIGH/LOW), unused, delay
+// Ensure the counts of steps per action and total actions are accurate else Bad Things Happen(tm)
 const int actionData[] = {
   // Up, slowly back, press, home
   6, // 4 steps
