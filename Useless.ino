@@ -28,9 +28,14 @@ const int LED_ACTION = 4; // Sets the LED state, state, null, sleep
 
 #include "ActionData.h"
 
+// Set to 1 to enable the serial debug output
+#define DEBUG 1
+
 void setup() {
   // Debug output
+  #if DEBUG
   Serial.begin(9600);
+  #endif
 
   // Setup the action data and make sure it can be accessed
   setupActionData();
@@ -49,7 +54,9 @@ void setup() {
   // Ensure we have random numbers
   randomSeed(analogRead(0));
 
-  Serial.print("Initialised");
+  #if DEBUG
+  Serial.println("Initialised");
+  #endif
 }
 
 // Setup the action data array so wwe can use it efficiently
@@ -94,20 +101,26 @@ void checkToggleState(int toggle) {
     delay(100);
     newState = digitalRead(togglePin[toggle]);
   }
+  #if DEBUG
   Serial.println("Toggle " + String(toggle) + " state: " + String(newState));
+  #endif
 
   if (newState == LOW && toggleState[toggle] != LOW) { // Has pullup so contact goes low
     int nextAction = random(0, actionCount) + 1;
     toggleAction[toggle] = nextAction;
     toggleStep[toggle] = 1;
+    #if DEBUG
     Serial.println("Toggle " + String(toggle) + " pressed, starting action " + String(nextAction));
+    #endif
   }
   toggleState[toggle] = newState;
 }
 
 void checkToggleAction(int toggle) {
   if (toggleAction[toggle]) {
+    #if DEBUG
     Serial.println("Toggle 1 action");
+    #endif
     // Calculate the offset into the action data array
     int actionStart = actionOffset[toggleAction[toggle] - 1];
     int actionStepStart = actionStart + 1 + ((toggleStep[toggle] - 1) * 4); // The step count, and 4 for each step
@@ -121,7 +134,9 @@ void checkToggleAction(int toggle) {
       // Not on the last one
       toggleStep[toggle]++;
     } else {
+      #if DEBUG
       Serial.println("Toggle 1 finished");
+      #endif
       // Reset everything
       toggleAction[toggle] = 0;
       toggleStep[toggle] = 0;
@@ -139,7 +154,9 @@ void doAction(int toggle, int actionOffset) {
   int param2 = actionData[actionOffset + 2];
   int actionSleep = actionData[actionOffset + 3];
 
+  #if DEBUG
   Serial.println("Action type: " + String(actionType) + " at " + String(actionOffset));
+  #endif
 
   int servoPosition;
   int buzzerPitch = 0;
@@ -148,28 +165,38 @@ void doAction(int toggle, int actionOffset) {
   switch (actionType) {
     case SERVO_ACTION: // position, duration
     case SERVOOP_ACTION: // FIXME swap servo
+      #if DEBUG
       Serial.println("Servo action");
+      #endif
       // FIXME ignores speed // param2 // adjust sleep as we delay
       // TODO Remap servoPosition to correct range
       servo[toggle].write(param1);
       break;
 
     case BUZZER_ACTION: // pitch, duration
+      #if DEBUG
       Serial.println("Buzzer action");
+      #endif
       tone(buzzerPin, param1, param2);
       break;
 
     case LED_ACTION: // state, null
+      #if DEBUG
       Serial.println("LED action");
+      #endif
       digitalWrite(ledPin, param1);
       break;
 
     default:
+      #if DEBUG
       Serial.println("Unknown action");
+      #endif
       // Do Nothing
       break;
   }
 
+  #if DEBUG
   Serial.println("Action sleeping for: " + String(actionSleep));
+  #endif
   delay(actionSleep);
 }
