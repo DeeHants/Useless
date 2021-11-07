@@ -108,8 +108,11 @@ void checkToggleState(int toggle) {
 void checkToggleAction(int toggle) {
   if (toggleAction[toggle]) {
     Serial.println("Toggle 1 action");
-    int actionStart = getActionOffset(toggleAction[toggle] - 1);
-    int actionStepStart = getActionStepOffset(toggleAction[toggle] - 1, toggleStep[toggle] - 1);
+    // Calculate the offset into the action data array
+    int actionStart = actionOffset[toggleAction[toggle] - 1];
+    int actionStepStart = actionStart + 1 + ((toggleStep[toggle] - 1) * 4); // The step count, and 4 for each step
+
+    // Do the action!
     doAction(toggle, actionStepStart);
 
     // See if we've got to the end
@@ -128,14 +131,6 @@ void checkToggleAction(int toggle) {
       servo[toggle].write(0);
     }
   }
-}
-
-int getActionOffset(int actionIndex) {
-  return actionOffset[actionIndex];
-}
-
-int getActionStepOffset(int actionIndex, int stepIndex) {
-  return actionOffset[actionIndex] + 1 + (stepIndex * 4);
 }
 
 void doAction(int toggle, int actionOffset) {
