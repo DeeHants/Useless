@@ -164,12 +164,17 @@ void doAction(int toggle, int actionOffset) {
   int ledState;
   switch (actionType) {
     case SERVO_ACTION:
-    case SERVOOP_ACTION: // FIXME swap servo
+    case SERVOOP_ACTION:
       #if DEBUG
       Serial.println("Servo action");
       #endif
       // param1 = position
       // param2 = duration
+
+      // Swap toggle ID
+      if (actionType == SERVOOP_ACTION) {
+        toggle = (toggle == 1 ? 0 : 1);
+      }
 
       // FIXME ignores speed // param2 // adjust sleep as we delay
       // TODO Remap servoPosition to correct range
