@@ -163,27 +163,35 @@ void doAction(int toggle, int actionOffset) {
   int buzzerDuration = 0;
   int ledState;
   switch (actionType) {
-    case SERVO_ACTION: // position, duration
+    case SERVO_ACTION:
     case SERVOOP_ACTION: // FIXME swap servo
       #if DEBUG
       Serial.println("Servo action");
       #endif
+      // param1 = position
+      // param2 = duration
+
       // FIXME ignores speed // param2 // adjust sleep as we delay
       // TODO Remap servoPosition to correct range
       servo[toggle].write(param1);
       break;
 
-    case BUZZER_ACTION: // pitch, duration
+    case BUZZER_ACTION:
       #if DEBUG
       Serial.println("Buzzer action");
       #endif
+      // param1 = pitch
+      // param2 = duration
+
       tone(buzzerPin, param1, param2);
       break;
 
-    case LED_ACTION: // state, null
+    case LED_ACTION:
       #if DEBUG
       Serial.println("LED action");
       #endif
+      // param1 = state
+
       digitalWrite(ledPin, param1);
       break;
 
